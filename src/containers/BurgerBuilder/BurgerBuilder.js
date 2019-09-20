@@ -48,31 +48,43 @@ class BurgerBuilder extends Component {
     purchaseContinueHandler = () =>{
         //alert('You are ordered!');
 
-        this.setState({loading:true});
+        /*this.setState({ loading: true });
         const order = {
             ingredient: this.state.ingredients,
             price: this.state.totalPrice,
-            customer:{
-                name:'Aziz',
-                adress:'test street',
-                zipCode:'34100',
-                country:'Turkey'
+            customer: {
+                name: 'Aziz',
+                adress: 'test street',
+                zipCode: '34100',
+                country: 'Turkey'
             },
-            email:'test@test.com',
-            deliveryMethod:'fastest'
+            email: 'test@test.com',
+            deliveryMethod: 'fastest'
         }
         axios.post('/orders.json', order)
-        .then(response => {
-            console.log(response);
-            this.setState({loading:false, purchasing: false});
-        })
-        .catch(error => {
-            console.log(error);
-            this.setState({loading:false, purchasing: false});
+            .then(response => {
+                console.log(response);
+                this.setState({ loading: false, purchasing: false });
+            })
+            .catch(error => {
+                console.log(error);
+                this.setState({ loading: false, purchasing: false });
+            });
+            */
+        const queryParams = [];
+        for (let i in this.state.ingredients){
+            queryParams.push(encodeURIComponent(i) + '=' +encodeURIComponent(this.state.ingredients[i]));
+            console.log(queryParams);
+        }
+        queryParams.push('price='+ this.state.totalPrice);
+        const queryString = queryParams.join('&');
+        this.props.history.push({
+            pathname: '/checkout',
+            search:'?' + queryString
         });
     }
 
-    upadtePurchaseState (ingredients){
+    updatePurchaseState (ingredients){
         
         const sum = Object.keys(ingredients).map(igKey => {
             return ingredients[igKey]; 
@@ -94,7 +106,7 @@ class BurgerBuilder extends Component {
         const oldPrice = this.state.totalPrice;
         const newPrice = oldPrice + priceAddition;
         this.setState({totalPrice: newPrice, ingredients:updatedIngredients});
-        this.upadtePurchaseState(updatedIngredients);
+        this.updatePurchaseState(updatedIngredients);
     }
 
     removeIngredientHandler = (type) =>{
@@ -111,7 +123,7 @@ class BurgerBuilder extends Component {
         const oldPrice = this.state.totalPrice;
         const newPrice = oldPrice - priceDeduction;
         this.setState({totalPrice: newPrice, ingredients:updatedIngredients});
-        this.upadtePurchaseState(updatedIngredients);    
+        this.updatePurchaseState(updatedIngredients);    
     }
 
     render () {
